@@ -1,0 +1,7 @@
+numpy
+pywavelets
+cffi
+soundfile
+sounddevice
+typing
+matplotlib

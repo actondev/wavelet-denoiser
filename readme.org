@@ -1,0 +1,8 @@
+* Creating the noisified dataset
+  + Place your source samples to the =dataset/= folder (please use =.wav= files!)
+  + run the =createDataset.sh= script
+
+* Creating the denoisified files (multiple variables - calculate snr efficiency)
+  + first create your dataset (=createDataset.sh=)
+  + the run the =denoiseDataset.sh= script
+	this should create the denoised files to the =dataset/denoised= folder, and a =stats.txt= file
