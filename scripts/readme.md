@@ -18,3 +18,6 @@
     Edit the script file to change the arguments that will be passed to the denoiser
 
     > example call `./applyDenoiserCombo.sh --noise=../dataset/noizeus44100/sp01*sn5.wav --out=../dataset/noizeus-denoised`
+
+- noizeusMetrics.sh \
+    Calculates the denoiser performance over a collection of denoised files from the noizeus dataset. To be used (ideally) after running the `applyDenoiserCombo.sh`
