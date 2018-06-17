@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# http://ecs.utdallas.edu/loizou/speech/noizeus/train_0dB.zip
+# setting cwd to the scripts folder
+cd "$(dirname ${BASH_SOURCE[0]})"
+
+outputDir="../dataset/noizeus"
+
+mkdir $outputDir
 
 # Available sounds:
 # airport babble car exhibition restaurant street airport station
@@ -10,7 +15,6 @@ sounds="airport babble car exhibition restaurant"
 # dbs="0 5 10"
 dbs="0 5 10"
 
-outputDir="./noizeus"
 
 if [ ! -e "${outputDir}/clean.zip" ]; then
 	echo "downloading clean.zip"

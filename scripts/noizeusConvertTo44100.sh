@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# known issue: the denoiser works better with 44100 files
+# that's why we go through that :)
 
-NOIZEUS_DIR="./noizeus";
-outputDir="./noizeus44100"
+NOIZEUS_DIR="../dataset/noizeus";
+outputDir="../dataset/noizeus44100";
 
 mkdir $outputDir
 

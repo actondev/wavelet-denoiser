@@ -1,8 +1,24 @@
 #!/bin/bash
 
-# example  calls
-# ./denoiseDatasetArgs.sh --noise=./noizeus44100/sp01*sn*.wav --out=./noizeus-denoised
-# ./denoiseDatasetArgs.sh --noise=./noizeus44100/*sn5.wav --out=./noizeus-denoised
+# example  call
+# to denoise all the noizeus files of speaker 1 (sp01) that is noisified at 5db snr
+# ./applyDenoiserCombo.sh --noise=../dataset/noizeus44100/sp01*sn5.wav --out=../dataset/noizeus-denoised
+
+DENOISER_COMMAND="python ../python/denoiser-argument.py"
+
+# set the parameters that will be passed to the denoiser below
+# space seperated values will mean that both will be applied
+# note: if A has value of "2 4" and B of "1 2" then the denoiser will be applied for
+# a=2,b=1 and a=2,b=2 and a=4,b=1 and a=4,b=2 ;)
+
+ARG_A="2"; # default 2
+ARG_B="1"; # default 1
+ARG_C="1"; # default 1
+ARG_D="0.1"; # default 0.1
+ARG_AKG="2 4"; # ak filter grad: default 4
+ARG_AKO="2"; # ak filter offset: default 2
+ARG_AKS="asc desc"; # ak filter slope: default asc
+ARG_TYPE="1 2"; # default 1 ?? or 2??
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -23,15 +39,6 @@ done
 
 VERBOSE=1
 DELIMITER="----------------------------"
-
-ARG_A="2"; # default 2
-ARG_B="1"; # default 1
-ARG_C="1"; # default 1
-ARG_D="0.1"; # default 0.1
-ARG_AKG="2 4"; #ak filter grad: default 4
-ARG_AKO="2"; #ak filter offset: default 2
-ARG_AKS="asc desc"; #ak filter slope: default asc
-ARG_TYPE="1 2"; # default 1 ?? or 2??
 
 
 # creating the output folder for our noisified files
@@ -61,13 +68,13 @@ function denoiseFile()
   ako=$6
   aks=$7
   type=$8
-
+ 
   counter=$(($counter+1))
 
   denoisedFile="$outDir/${baseNameWithoutExtension}(a=${a},b=${b},c=${c},d=${d},akg=${akg},ako=${ako},aks=${aks},type=${type}).wav"
   denoisedFile=`realpath $denoisedFile`
 
-  CMD="python3 python/denoiser-argument.py --file=\"$file\" -a=$a -b=$b -c=$c -d=$d -akg=$akg -ako=$ako -aks=$aks -type=$type -o=$denoisedFile"
+  CMD="${DENOISER_COMMAND} --file=\"$file\" -a=$a -b=$b -c=$c -d=$d -akg=$akg -ako=$ako -aks=$aks -type=$type -o=$denoisedFile"
   out=$($CMD)
   if [ $VERBOSE -gt 0 ]; then
     echo "$DELIMITER"
