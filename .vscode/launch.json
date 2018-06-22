@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}"
+        },
+        {
+            "name": "Denoiser arguments",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/denoiser-argument.py",
+            "args": [
+                "--file",
+                "test/resources/sp01_airport_sn5_44100.wav",
+                "-a",
+                "2",
+                "-b",
+                "1",
+                "-c",
+                "1",
+                "-d",
+                "0.1",
+                "-akg",
+                "0.1",
+                "-ako",
+                "2",
+                "-aks",
+                "asc",
+                "-type",
+                "2",
+                "-o",
+                "test/artifacts/sp01_airport_sn5_44100_denoised.wav",
+            ]
+        },
+        {
+            "name": "Denoiser metric",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/metric-cci.py",
+            "args":
+            [
+                "-a",
+                "test/resources/sp01_44100.wav",
+                "-b",
+                "test/artifacts/sp01_airport_sn5_44100_denoised.wav",
+            ],
+        },
+    ]
+}

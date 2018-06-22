@@ -87,8 +87,6 @@ function denoiseFile()
   fi
 }
 
-COMMAND_DENOISE="python denoiser-argument -f "
-
 for file in $sourceFiles; do
   echo "$DELIMITER"
   baseNameWithoutExtension=$(basename "$file" .wav)
