@@ -69,5 +69,9 @@ alias python3="python"
   python3 -m unittest discover -v -s ./test -p '*test*.py'
   #+END_SRC
 
+* Continuous Integration
+  Had the project initially just on gitlab and started using =gitlab-ci=.. seems quite nice :)
+  It can integrate with public github repos as well. Hooray
+
 * Known problems
   + [ ] the denoiser is optimized for input files of =44100 kHz= samplerate.
