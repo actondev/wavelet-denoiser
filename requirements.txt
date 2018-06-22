@@ -1,7 +1,9 @@
 numpy
 pywavelets
 cffi
+argparse
 soundfile
+sndfile
 sounddevice
 typing
 matplotlib

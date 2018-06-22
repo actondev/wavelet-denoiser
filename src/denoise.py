@@ -5,7 +5,6 @@ import pywt
 from windowBundle import WindowBundle
 from noiseProfiler import NoiseProfiler
 
-
 class Denoiser:
     'Basic denoiser wrapper for keeping store of the settings'
 

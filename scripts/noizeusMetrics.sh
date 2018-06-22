@@ -1,9 +1,15 @@
 #!/bin/bash
 
-# Script to calculate the denoiser performance over one particualr noised file from the noizeus dataset
+# Script to calculate the denoiser performance over a collection of denoised files from the noizeus dataset
+# Note: it will output the results in a format ready to be used in org-mode of emacs (putting the results in a table)
 # 
 # example  usage
-# ./calculateMetricsArgs.sh --denoised=./noizeus-denoised/sp01_airport_sn5*.wav --source=./noizeus44100/
+# ./metrics.sh --denoised=../dataset/noizeus-denoised/sp01_airport_sn5*.wav --source=../dataset/noizeus44100/
+# the above command will calcute the metric for all the denoised files.
+# It will try to find the clean file in the given source directory eg the sp01_airport_sn5(..denoiser params..).wav
+#   will assume sp01_airport.wav as the source file
+
+PYTHON_METRIC_CMD="python ../src/metric-cci.py"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -85,7 +91,7 @@ noisedFile="${source}/${noisedName}.wav"
 # echo "noisedFile $noisedFile"
 cleanFile=$(getCleanFilePathFromDenoisedFile $denoised)
 # echo "cleanFile $cleanFile"
-CMD_METRIC_NOISED="python3 python/metric-cci.py --a=\"$noisedFile\" -b=\"$cleanFile\""
+CMD_METRIC_NOISED="${PYTHON_METRIC_CMD} --a=\"$noisedFile\" -b=\"$cleanFile\""
 metricNoised=$($CMD_METRIC_NOISED)
 
 # echoing for emacs output :)
@@ -98,7 +104,7 @@ for denoisedFile in $denoisedFiles; do
     # echo "params: $params"
     noisedName=$(getNoisedNameFromDenoisedFile $denoisedFile)
     cleanFile=$(getCleanFilePathFromDenoisedFile $denoisedFile)
-    CMD_METRIC_DENOISED="python3 python/metric-cci.py --a=\"$denoisedFile\" -b=\"$cleanFile\""
+    CMD_METRIC_DENOISED="${PYTHON_METRIC_CMD} --a=\"$denoisedFile\" -b=\"$cleanFile\""
     # echo running $CMD
     metricDenoised=$($CMD_METRIC_DENOISED)
     # echo "$params: $metric"

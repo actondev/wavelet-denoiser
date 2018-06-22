@@ -3,13 +3,11 @@ Denoise a file (pass the filename as argument)
 """
 
 import os
-import sys
 import argparse
 import time
 import soundfile
 from denoise import Denoiser
 from noiseProfiler import NoiseProfiler
-from windowBundle import WindowBundle
 
 parser = argparse.ArgumentParser()
 
@@ -48,12 +46,9 @@ args.file = args.file.replace("'", "")
 
 filePath = os.path.dirname(args.file)
 fileName = os.path.basename(args.file)
-# we will now be working in the provided sample path -> so we will write
-# there
-os.chdir(filePath)
 
 print("trying to open " + args.file)
-data, sampleRate = soundfile.read(fileName)
+data, sampleRate = soundfile.read(args.file)
 
 # if it's stereo it will have 2 columns.. so, checking for number of columns and if there is
 # more than 1, transpose & keep the first row
@@ -96,17 +91,13 @@ else:
 
 dataDenoised = denoiser.denoise_wpa(Xin=data, Nin=dataNoise)
 
-dateStr = time.strftime("%y%m%d-%H.%M.%S")
-fileOnlyName, fileExtension = os.path.splitext(fileName)
-denoisedFileName = fileOnlyName + "_denoised_" + dateStr + fileExtension
-
 outPath = os.path.dirname(args.output)
-outName = os.path.basename(args.output)
-# we will now be working in the provided sample path -> so we will write
-# there
-os.chdir(outPath)
+
+if(outPath and not os.path.isdir(outPath)):
+    os.makedirs(outPath,exist_ok=True)
 
 print("will write denoised file to " + args.output)
+
 soundfile.write(args.output, dataDenoised, sampleRate)
 
 print("OK")
