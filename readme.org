@@ -65,7 +65,9 @@ alias python3="python"
    ..though some give errors. See more [[https://stackoverflow.com/questions/41189110/why-pywavelet-wavelet-does-not-accept-all-built-in-wavelets][here]]
      
 * Running the tests
-  Just run =python3 -m unittest discover -v -s ./test -p '*test*.py'=
-	
+  #+BEGIN_SRC sh
+  python3 -m unittest discover -v -s ./test -p '*test*.py'
+  #+END_SRC
+
 * Known problems
   + [ ] the denoiser is optimized for input files of =44100 kHz= samplerate.
