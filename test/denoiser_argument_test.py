@@ -18,7 +18,7 @@ class DenoisingWithArgumentsTest(unittest.TestCase):
         cmdArgs = [
             "python3",
             "./src/denoiser-argument.py",
-            "--file",
+            "-i",
             DenoisingWithArgumentsTest.testFilePath,
             "-a",
             "2",
