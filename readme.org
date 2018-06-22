@@ -1,3 +1,44 @@
+* TL;DR
+  #+BEGIN_SRC sh
+  python3 src/denoiser-argument.py -i <input file path> -o <output file path>
+  #+END_SRC
+  
+  For an extensive list of what arguments you can pass
+  #+BEGIN_SRC sh :results pp :exports both :eval never-export
+  python3 src/denoiser-argument.py --help
+  #+END_SRC
+
+  #+RESULTS:
+  #+begin_example
+  usage: denoiser-argument.py [-h] -i INPUT [-a A] [-b B] [-c C] [-d D]
+							  [-type {1,2,3}] [-akg AKG] [-ako AKO]
+							  [-aks {asc,desc}] [-l L] [-t TIME] [-v] -o OUTPUT
+
+  optional arguments:
+	-h, --help            show this help message and exit
+	-i INPUT, --input INPUT
+						  the relative or absolute path of the sound file you
+						  wish to denoise
+	-a A                  denoiser param 'a' (default: 2)
+	-b B                  denoiser param 'b' (default: 1)
+	-c C                  denoiser param 'c' (default: 1)
+	-d D                  denoiser param 'd' (default: 0.1)
+	-type {1,2,3}         filter type (default: 1)
+	-akg AKG              grad of the Ak filter (default: 4)
+	-ako AKO              offset of the Ak filter (default: 2)
+	-aks {asc,desc}       the slope of the Ak filter - 'asc' or 'desc' (default:
+						  asc)
+	-l L                  wavelet packed decomposition levels (default: 8)
+	-t TIME, --time TIME  the period of silence present in the audio file (in
+						  seconds) eg: '0-0.5'. If none provided, the noise
+						  period will be autoimatically found
+	-v, --verbose         verbose (plays the result audio)
+	-o OUTPUT, --output OUTPUT
+						  The output filename
+  #+end_example
+  
+  comment: =org-mode= in =emacs= is awesome
+
 * Wavelet denoiser
   This is the product of my thesis for my =Electrical & Computer Engineering= diploma at =Aristotle University of Thessaloniki=. Good times (nah not really. i'm lazy, and doing this while having a day-job.. mierda)
 
@@ -15,7 +56,7 @@
   #+RESULTS:
   : Hello open source world
 
-  side comment: =org-mode= from =emacs= is awesome
+  
 
 * Installation
   + sudo apt-get install python3 python3-setuptools python3-pip
