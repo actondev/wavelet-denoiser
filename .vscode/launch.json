@@ -16,7 +16,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/denoiser-argument.py",
             "args": [
-                "--file",
+                "-i",
                 "test/resources/sp01_airport_sn5_44100.wav",
                 "-a",
                 "2",

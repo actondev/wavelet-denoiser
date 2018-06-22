@@ -1,16 +1,3 @@
-## Running the tests
-Just run `python3 -m unittest discover -v -s ./test -p '*test*.py'`
-
-### Windows fix
-If you are on windows, and your executable to run `python` is.. `python` (even though it's version 3) then using `git bash`:
-- `which python`
-  will tell you the path of the executable for the python
-- make sure `python -V` shows version 3
-- `ln -s /path/of/python/from/which/python/command ~/bin`
-- edit the environment variables for your current user, and add the `C:\users\USERNAME\bin` there
-
-For example, I had to run `ln -s /c/Python36/python.exe ~/bin/python3.exe`
-
 ## Scripts provided
 
  - noizesDataset.sh \

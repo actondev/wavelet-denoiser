@@ -1,31 +1,71 @@
+* Wavelet denoiser
+  This is the product of my thesis for my =Electrical & Computer Engineering= diploma at =Aristotle University of Thessaloniki=. Good times (nah not really. i'm lazy, and doing this while having a day-job.. mierda)
+
+  Open sourced for 2 reasons
+  + other people can use it
+  + other people can improve it/comment on how to improve it ..aka tell me how much shitty the code -or the math- is :)
+	
+
+  It's my first attempt to try to do something in the open source world.
+
+  #+BEGIN_SRC sh :exports both :eval never-export
+  echo "Hello open source world"
+  #+END_SRC
+
+  #+RESULTS:
+  : Hello open source world
+
+  side comment: =org-mode= from =emacs= is awesome
+
 * Installation
   + sudo apt-get install python3 python3-setuptools python3-pip
-  + pip3 install numpy
   + pip3 install -r requirements.txt
-	or instad of =pip3= run =python3 -m pip=
-	
-* Known problems
-  Reaper crashes on second call to =soundfile.read("file")=
+	or instad of =pip3= you can run =python3 -m pip=
+
+** Windows
+   + [[https://chocolatey.org/install][install chocolatey]]
+   + choco install python3
+	  with the above, python3 is available with the =python= command. Change this to python3 like that, by using =git bash=
+   
+** python3 vs python fix
+   If you are on windows, and your executable to run =python= is.. =python= (even though it's version 3) then using =git bash=:
+   - =which python=
+	 will tell you the path of the executable for the python
+   - make sure =python -V= shows version 3
+   - =ln -s /path/of/python/from/which/python/command ~/bin=
+   - edit the environment variables for your current user, and add the =C:\users\USERNAME\bin= there
+   
+   For example, I had to run =ln -s /c/Python36/python.exe ~/bin/python3.exe=
+
+   This wall make =python3= available in the =cmd= console of windows as well (useful in case you run the tests from =Visual Studio Code= in Windows)
+
+   A simpler way, to just make the =python3= command available in =git bash= would be to
+   + =vim ~/.bashrc=
+	 #+BEGIN_SRC text
+alias python3="python"
+	 #+END_SRC
+   + =source ~/.bashrc=
   
 * Usage
-
+  
 ** Denoiser
-   run =python3 denoiser-argument.py -f <filename>=
+   run =python3 denoiser-argument.py -i <input file path> -o <output file path>=.
+   For all the parameters you can pass to the denoiser, run =python3 denoiser-argument --help=
    
-** Wavelet Metrics
-   + python3 src/wavelet-metric.py -a "../dataset/source/speech1.wav" -b "../dataset/denoised/speech1_noised_white_snr0_a_2_b_1_c1_d0.1_akg2_ako2_aksasc_type2.wav"
-   + python3 src/wavelet-metric.py -a "../dataset/source/speech1.wav" -b "../dataset/speech1_denoised_izotope_rx.wav"
-* Windows
-  + [[https://chocolatey.org/install][install chocolatey]]
-  + choco install python3
-	 with the above, python3 is available with the =python= command. Change this to python3 like that, by using =git bash=
-	 + vim ~/.bashrc
-	   #+BEGIN_SRC text
-alias python3="python"
-       #+END_SRC
-	   ..and =source ~/.bashrc=
-	    
-* Available wavelets
-  ['bior1.1', 'bior1.3', 'bior1.5', 'bior2.2', 'bior2.4', 'bior2.6', 'bior2.8', 'bior3.1', 'bior3.3', 'bior3.5', 'bior3.7', 'bior3.9', 'bior4.4', 'bior5.5', 'bior6.8', 'cgau1', 'cgau2', 'cgau3', 'cgau4', 'cgau5', 'cgau6', 'cgau7', 'cgau8', 'cmor', 'coif1', 'coif2', 'coif3', 'coif4', 'coif5', 'coif6', 'coif7', 'coif8', 'coif9', 'coif10', 'coif11', 'coif12', 'coif13', 'coif14', 'coif15', 'coif16', 'coif17', 'db1', 'db2', 'db3', 'db4', 'db5', 'db6', 'db7', 'db8', 'db9', 'db10', 'db11', 'db12', 'db13', 'db14', 'db15', 'db16', 'db17', 'db18', 'db19', 'db20', 'db21', 'db22', 'db23', 'db24', 'db25', 'db26', 'db27', 'db28', 'db29', 'db30', 'db31', 'db32', 'db33', 'db34', 'db35', 'db36', 'db37', 'db38', 'dmey', 'fbsp', 'gaus1', 'gaus2', 'gaus3', 'gaus4', 'gaus5', 'gaus6', 'gaus7', 'gaus8', 'haar', 'mexh', 'morl', 'rbio1.1', 'rbio1.3', 'rbio1.5', 'rbio2.2', 'rbio2.4', 'rbio2.6', 'rbio2.8', 'rbio3.1', 'rbio3.3', 'rbio3.5', 'rbio3.7', 'rbio3.9', 'rbio4.4', 'rbio5.5', 'rbio6.8', 'shan', 'sym2', 'sym3', 'sym4', 'sym5', 'sym6', 'sym7', 'sym8', 'sym9', 'sym10', 'sym11', 'sym12', 'sym13', 'sym14', 'sym15', 'sym16', 'sym17', 'sym18', 'sym19', 'sym20']
+** Denoised file metrics
+   If you have the clean audio file (that is then noisified)
+   + denoise the file
+   + calculate the denoiser metric \\
+     =python3 src/metric-cci.py -a "the clean file .wav" -b "the denoised file.wav"=
+	 
+	     
+** Available wavelets
+   ['bior1.1', 'bior1.3', 'bior1.5', 'bior2.2', 'bior2.4', 'bior2.6', 'bior2.8', 'bior3.1', 'bior3.3', 'bior3.5', 'bior3.7', 'bior3.9', 'bior4.4', 'bior5.5', 'bior6.8', 'cgau1', 'cgau2', 'cgau3', 'cgau4', 'cgau5', 'cgau6', 'cgau7', 'cgau8', 'cmor', 'coif1', 'coif2', 'coif3', 'coif4', 'coif5', 'coif6', 'coif7', 'coif8', 'coif9', 'coif10', 'coif11', 'coif12', 'coif13', 'coif14', 'coif15', 'coif16', 'coif17', 'db1', 'db2', 'db3', 'db4', 'db5', 'db6', 'db7', 'db8', 'db9', 'db10', 'db11', 'db12', 'db13', 'db14', 'db15', 'db16', 'db17', 'db18', 'db19', 'db20', 'db21', 'db22', 'db23', 'db24', 'db25', 'db26', 'db27', 'db28', 'db29', 'db30', 'db31', 'db32', 'db33', 'db34', 'db35', 'db36', 'db37', 'db38', 'dmey', 'fbsp', 'gaus1', 'gaus2', 'gaus3', 'gaus4', 'gaus5', 'gaus6', 'gaus7', 'gaus8', 'haar', 'mexh', 'morl', 'rbio1.1', 'rbio1.3', 'rbio1.5', 'rbio2.2', 'rbio2.4', 'rbio2.6', 'rbio2.8', 'rbio3.1', 'rbio3.3', 'rbio3.5', 'rbio3.7', 'rbio3.9', 'rbio4.4', 'rbio5.5', 'rbio6.8', 'shan', 'sym2', 'sym3', 'sym4', 'sym5', 'sym6', 'sym7', 'sym8', 'sym9', 'sym10', 'sym11', 'sym12', 'sym13', 'sym14', 'sym15', 'sym16', 'sym17', 'sym18', 'sym19', 'sym20']
 
-  ..though some give errors. See more [[https://stackoverflow.com/questions/41189110/why-pywavelet-wavelet-does-not-accept-all-built-in-wavelets][here]]
+   ..though some give errors. See more [[https://stackoverflow.com/questions/41189110/why-pywavelet-wavelet-does-not-accept-all-built-in-wavelets][here]]
+     
+* Running the tests
+  Just run =python3 -m unittest discover -v -s ./test -p '*test*.py'=
+	
+* Known problems
+  + [ ] the denoiser is optimized for input files of =44100 kHz= samplerate.

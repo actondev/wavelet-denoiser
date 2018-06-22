@@ -74,7 +74,7 @@ function denoiseFile()
   denoisedFile="$outDir/${baseNameWithoutExtension}(a=${a},b=${b},c=${c},d=${d},akg=${akg},ako=${ako},aks=${aks},type=${type}).wav"
   denoisedFile=`realpath $denoisedFile`
 
-  CMD="${DENOISER_COMMAND} --file=\"$file\" -a=$a -b=$b -c=$c -d=$d -akg=$akg -ako=$ako -aks=$aks -type=$type -o=$denoisedFile"
+  CMD="${DENOISER_COMMAND} -i=\"$file\" -a=$a -b=$b -c=$c -d=$d -akg=$akg -ako=$ako -aks=$aks -type=$type -o=$denoisedFile"
   out=$($CMD)
   if [ $VERBOSE -gt 0 ]; then
     echo "$DELIMITER"

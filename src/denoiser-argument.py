@@ -12,7 +12,7 @@ from noiseProfiler import NoiseProfiler
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
-    "-f", "--file", help="the relative or absolute path of the sound file you wish to denoise", required=True)
+    "-i", "--input", help="the relative or absolute path of the sound file you wish to denoise", required=True)
 parser.add_argument("-a", default=2, type=int,
                     help="denoiser param 'a' (default: %(default)s)")
 parser.add_argument("-b", default=1, type=int,
@@ -41,14 +41,14 @@ parser.add_argument("-o", "--output", required=True,
 
 args = parser.parse_args()
 
-args.file = args.file.replace("\"", "")
-args.file = args.file.replace("'", "")
+args.input = args.input.replace("\"", "")
+args.input = args.input.replace("'", "")
 
-filePath = os.path.dirname(args.file)
-fileName = os.path.basename(args.file)
+filePath = os.path.dirname(args.input)
+fileName = os.path.basename(args.input)
 
-print("trying to open " + args.file)
-data, sampleRate = soundfile.read(args.file)
+print("trying to open " + args.input)
+data, sampleRate = soundfile.read(args.input)
 
 # if it's stereo it will have 2 columns.. so, checking for number of columns and if there is
 # more than 1, transpose & keep the first row
