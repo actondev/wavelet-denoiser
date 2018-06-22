@@ -3,7 +3,6 @@ import subprocess
 import os
 import sys
 
-
 class DenoisingWithArgumentsTest(unittest.TestCase):
 
     testFilePath = "./test/resources/sp01_airport_sn5_44100.wav"
@@ -16,14 +15,9 @@ class DenoisingWithArgumentsTest(unittest.TestCase):
         self.assert_denoised_file_metric()
 
     def assert_denoise_command_with_argument_works(self):
-        output = subprocess.run(["pwd"], shell=True, stdout=subprocess.PIPE,
-                                universal_newlines=True)
-        output = subprocess.run(["ls"], shell=True, stdout=subprocess.PIPE,
-                                universal_newlines=True)
-
         cmdArgs = [
             "python3",
-            "./python/denoiser-argument.py",
+            "./src/denoiser-argument.py",
             "--file",
             DenoisingWithArgumentsTest.testFilePath,
             "-a",
@@ -61,7 +55,7 @@ class DenoisingWithArgumentsTest(unittest.TestCase):
     def assert_denoised_file_metric(self):
         cmdArgs = [
             "python3",
-            "python/metric-cci.py",
+            "src/metric-cci.py",
             "-a",
             DenoisingWithArgumentsTest.cleanFilePath,
             "-b",

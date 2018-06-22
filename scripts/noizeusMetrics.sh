@@ -9,7 +9,7 @@
 # It will try to find the clean file in the given source directory eg the sp01_airport_sn5(..denoiser params..).wav
 #   will assume sp01_airport.wav as the source file
 
-PYTHON_METRIC_CMD="python ../python/metric-cci.py"
+PYTHON_METRIC_CMD="python ../src/metric-cci.py"
 
 while [ $# -gt 0 ]; do
   case "$1" in

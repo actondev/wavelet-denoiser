@@ -21,7 +21,7 @@ for sourceFile in $sourceFiles; do
 	for noiseFile in $noiseFiles; do
     echo "noise $noiseFile"
 		for snr in $SNRS; do
-			python python/noisify.py --source "$sourceFile" --noise "$noiseFile" --snr "$snr" --output "$OUTPUT_FOLDER"
+			python src/noisify.py --source "$sourceFile" --noise "$noiseFile" --snr "$snr" --output "$OUTPUT_FOLDER"
 		done
 	done
 done

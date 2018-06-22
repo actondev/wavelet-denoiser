@@ -7,7 +7,7 @@ RUN apt-get install -y python3-pip
 RUN apt-get install - y libsndfile1-dev
 
 WORKDIR /tmp
-COPY python/requirements.txt /tmp
+COPY requirements.txt /tmp
 RUN pip3 install -r requirements.txt
 
 COPY docker/entrypoint.sh /tmp

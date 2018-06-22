@@ -4,7 +4,7 @@
 # to denoise all the noizeus files of speaker 1 (sp01) that is noisified at 5db snr
 # ./applyDenoiserCombo.sh --noise=../dataset/noizeus44100/sp01*sn5.wav --out=../dataset/noizeus-denoised
 
-DENOISER_COMMAND="python ../python/denoiser-argument.py"
+DENOISER_COMMAND="python ../src/denoiser-argument.py"
 
 # set the parameters that will be passed to the denoiser below
 # space seperated values will mean that both will be applied

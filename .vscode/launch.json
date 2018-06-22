@@ -14,7 +14,7 @@
             "name": "Denoiser arguments",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/python/denoiser-argument.py",
+            "program": "${workspaceFolder}/src/denoiser-argument.py",
             "args": [
                 "--file",
                 "test/resources/sp01_airport_sn5_44100.wav",
@@ -42,7 +42,7 @@
             "name": "Denoiser metric",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/python/metric-cci.py",
+            "program": "${workspaceFolder}/src/metric-cci.py",
             "args":
             [
                 "-a",
