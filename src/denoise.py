@@ -5,6 +5,7 @@ import pywt
 from windowBundle import WindowBundle
 from noiseProfiler import NoiseProfiler
 
+
 class Denoiser:
     'Basic denoiser wrapper for keeping store of the settings'
 
@@ -17,8 +18,9 @@ class Denoiser:
                  akOffset=1,
                  akSlope='ASC',
                  wlevels=8,
-                 dbName='db8',
-                 filterType=2
+                 waveletName='db8',
+                 filterType=2,
+                 method='wpa'
                  ):
         self.a = a
         self.b = b
@@ -26,10 +28,11 @@ class Denoiser:
         self.d = d
         self.akGrad = akGrad
         self.akOffset = akOffset
-        self.dbName = dbName
+        self.waveletName = waveletName
         self.akSlope = akSlope
         self.wlevels = wlevels
         self.filterType = filterType
+        self.method = method
         print("Denoiser options: ")
         print("a: " + str(a))
         print("b: " + str(b))
@@ -38,6 +41,8 @@ class Denoiser:
         print("akGrad: " + str(akGrad))
         print("akOffset: " + str(akOffset))
         print("filterType: " + str(filterType))
+        print("method: " + method)
+        print("wavelet: " + waveletName)
 
     def padArray(self, srcArr, targetSize):
         targetArr = srcArr[:]
@@ -49,23 +54,20 @@ class Denoiser:
         targetArr = targetArr[0:targetSize]
         return targetArr
 
-    def denoiseWithNoiseProfiler(self, noiseProfiler: NoiseProfiler):
-        windows = noiseProfiler.windows
-        for window in windows:
-            x = window.data
-            n = window.noiseWindow.data
-            window.setDenoisedData(self.denoise_wpa(x,n))
-
-        return WindowBundle.joinDenoisedData(windows)
-
-
+    def denoise(self, Xin, Nin):
+        if (self.method == 'wpa'):
+            return self.denoise_wpa(Xin, Nin)
+        elif (self.method == 'dwt'):
+            return self.denoise_wavedec(Xin, Nin);
 
     def denoise_wpa(self, Xin, Nin):
         # print("Xin len " + str(len(Xin)))
-        X = pywt.WaveletPacket(Xin, self.dbName, 'symmetric', self.wlevels)
-        N = pywt.WaveletPacket(Nin, self.dbName, 'symmetric', self.wlevels)
+        X = pywt.WaveletPacket(Xin, self.waveletName,
+                               'symmetric', self.wlevels)
+        N = pywt.WaveletPacket(Nin, self.waveletName,
+                               'symmetric', self.wlevels)
         Y = pywt.WaveletPacket(
-            data=None, wavelet=self.dbName, mode='symmetric')
+            data=None, wavelet=self.waveletName, mode='symmetric')
         # print("X len" + str(X.maxlevel))
         # the output of pywt.wavedec will be arrays (trees) of size/length wlevels+1
         # so at the index of 1[wlevels] we have the "leaf node"
@@ -75,13 +77,17 @@ class Denoiser:
         # print(Ak)
         # print(XleafNodes)
         bandId = 0
+        numOfBands = len(XleafNodes)
+        counter = 0;
         for node in XleafNodes:
+            print(str(round(counter/numOfBands*100)) + "%")
             bandAk = Ak[bandId]
             bandId += 1
             XbandData = X[node].data
             NbandData = N[node].data
             YbandData = self.denoise_band(XbandData, NbandData, bandAk)
             Y[node] = YbandData
+            counter=counter+1
 
         # reconstructing the audio from Y
         Yaudio = Y.reconstruct(update=False)
@@ -90,32 +96,29 @@ class Denoiser:
     def denoise_wavedec(self, Xin, Nin):
         """ Multilevel 1D Discrete Wavelet Transform of data """
         # print("Xin len " + str(len(Xin)))
-        X = pywt.wavedec(Xin, self.dbName, 'symmetric')
-        N = pywt.wavedec(Nin, self.dbName, 'symmetric')
-        Y =[]
+        X = pywt.wavedec(Xin, self.waveletName, 'symmetric')
+        N = pywt.wavedec(Nin, self.waveletName, 'symmetric')
+        Y = []
         # print("X len" + str(X.maxlevel))
         # the output of pywt.wavedec will be arrays (trees) of size/length wlevels+1
         # so at the index of 1[wlevels] we have the "leaf node"
-        nBands =len(X)
+        nBands = len(X)
         Ak = self.linearAk(nBands, self.akSlope)
         # print(Ak)
         # print(XleafNodes)
         bandId = 0
         for node in range(nBands):
+            print(str(round(bandId/nBands*100)) + "%")
             bandAk = Ak[bandId]
-            bandId += 1
             XbandData = X[node]
             NbandData = N[node]
             YbandData = self.denoise_band(XbandData, NbandData, bandAk)
             Y.append(YbandData)
+            bandId += 1            
 
         # reconstructing the audio from Y
-        Yaudio = pywt.waverec(Y, self.dbName, mode='symmetric')
-        return Yaudio
-
-    def denoiseWindow(self, window:WindowBundle):
-        pass
-
+        Yaudio = pywt.waverec(Y, self.waveletName, mode='symmetric')
+        return Yaudio;
 
     def denoise_band(self, X, N, ak):
         Px = self.aPowered(X)

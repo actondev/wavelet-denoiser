@@ -3,4 +3,4 @@ services:
   denoiser:
     build: ./
     volumes:
-      - ../:/code
+      - ./:/code

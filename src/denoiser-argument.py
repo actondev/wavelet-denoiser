@@ -31,6 +31,10 @@ parser.add_argument("-aks", default="asc", choices=['asc', 'desc'],
                     help="the slope of the Ak filter - 'asc' or 'desc' (default: %(default)s)")
 parser.add_argument("-l", default=8, type=int,
                     help="wavelet packed decomposition levels (default: %(default)s)")
+parser.add_argument("-wavelet", default='db8',
+                    help="the wavelet to be used (default: %(default)s)")
+parser.add_argument("-method", default="wpa", choices=['wpa', 'dwt'],
+                    help="The wavelet transform method - 'wpa' or 'dwt' (default: %(default)s)")
 parser.add_argument("-t", "--time",
                     help="the period of silence present in the audio file (in seconds) eg: '0-0.5'. If none provided, the noise period will be autoimatically found ",
                     required=False)
@@ -66,8 +70,9 @@ denoiser = Denoiser(
     akOffset=args.ako,
     akSlope=args.aks,
     wlevels=args.l,
-    dbName='db8',
-    filterType=args.type
+    method=args.method,
+    waveletName=args.wavelet,
+    filterType=args.type,
 )
 
 
@@ -89,7 +94,8 @@ else:
     noiseProfile = NoiseProfiler(data)
     dataNoise = noiseProfile.getNoiseDataPredicted()
 
-dataDenoised = denoiser.denoise_wpa(Xin=data, Nin=dataNoise)
+dataDenoised = denoiser.denoise(Xin=data, Nin=dataNoise)
+
 
 outPath = os.path.dirname(args.output)
 
@@ -97,7 +103,6 @@ if(outPath and not os.path.isdir(outPath)):
     os.makedirs(outPath,exist_ok=True)
 
 print("will write denoised file to " + args.output)
-
 soundfile.write(args.output, dataDenoised, sampleRate)
 
 print("OK")

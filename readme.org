@@ -12,7 +12,8 @@
   #+begin_example
   usage: denoiser-argument.py [-h] -i INPUT [-a A] [-b B] [-c C] [-d D]
 							  [-type {1,2,3}] [-akg AKG] [-ako AKO]
-							  [-aks {asc,desc}] [-l L] [-t TIME] [-v] -o OUTPUT
+							  [-aks {asc,desc}] [-l L] [-wavelet WAVELET]
+							  [-method {wpa,dwt}] [-t TIME] [-v] -o OUTPUT
 
   optional arguments:
 	-h, --help            show this help message and exit
@@ -29,15 +30,63 @@
 	-aks {asc,desc}       the slope of the Ak filter - 'asc' or 'desc' (default:
 						  asc)
 	-l L                  wavelet packed decomposition levels (default: 8)
+	-wavelet WAVELET      the wavelet to be used (default: db8)
+	-method {wpa,dwt}     The wavelet transform method - 'wpa' or 'dwt'
+						  (default: wpa)
 	-t TIME, --time TIME  the period of silence present in the audio file (in
 						  seconds) eg: '0-0.5'. If none provided, the noise
 						  period will be autoimatically found
 	-v, --verbose         verbose (plays the result audio)
 	-o OUTPUT, --output OUTPUT
 						  The output filename
-  #+end_example
+#+end_example
+    comment: =org-mode= in =emacs= is awesome for writing this kind of documents :)
+	
+** Docker way
+   First run =docker-compose build=, and then
+   
+  #+BEGIN_SRC sh :results pp :exports both :eval never-export
+  docker-compose run denoiser python3 src/denoiser-argument.py -i test/resources/sp01_airport_sn5_44100.wav -o denoised.wav
+  #+END_SRC
+
+   You should see something like
+  #+RESULTS:
+  #+begin_example
+  trying to open test/resources/sp01_airport_sn5_44100.wav
+  Number of samples read: 124192
+  Denoiser options: 
+  a: 2
+  b: 1
+  c: 1
+  d: 0.1
+  akGrad: 4
+  akOffset: 2
+  filterType: 1
+  method: wpa
+  wavelet: db8
+  Noise profiler finished
+  0%
+  1%
+  ...
+  99%
+  100%
+  will write denoised file to denoised.wav
+  OK
+#+end_example
+   
+   To denoise your own file (let's say =noised.wav=)
+   + put this file in the root directory
+   + run =docker-compose run denoiser python3 src/denoiser-argument.py -i noised.wav -o denoised.wav=
+   + profit :)
   
-  comment: =org-mode= in =emacs= is awesome
+
+   If you don't want to use =docker-compose= and only docker
+   + =docker build . -t actondev/denoiser=
+   + and then
+     #+BEGIN_SRC sh
+docker run -v $(pwd):/code actondev/denoiser python3 src/denoiser-argument.py -i test/resources/sp01_airport_sn5_44100.wav -o denoised.wav
+      #+END_SRC
+
 
 * Wavelet denoiser
   This is the product of my thesis for my =Electrical & Computer Engineering= diploma at =Aristotle University of Thessaloniki=. Good times (nah not really. i'm lazy, and doing this while having a day-job.. mierda)
