@@ -1,6 +1,7 @@
 ''' Wavelet Denoiser '''
 
 import numpy
+import numpy as np
 import pywt
 from windowBundle import WindowBundle
 from noiseProfiler import NoiseProfiler
@@ -168,7 +169,10 @@ class Denoiser:
         Hd = numpy.zeros(nSamples)
         # iterating through the 'w' (from the paper)
         for i in range(0, nSamples):
-            Hd[i] = pow((1 - self.c * Pn * ak / Px[i]), self.b)
+            if Px[i] < self.c * ak * Pn:
+                Hd[i] = 0  # fix from signalPresenceFilter
+            else:
+                Hd[i] = pow((1 - self.c * Pn * ak / Px[i]), self.b)
         return Hd
 
     def linearAk(self, nBands, slope):
