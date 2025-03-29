@@ -1,4 +1,11 @@
 #+PROPERTY: header-args:sh :session *wavelet-denoiser*
+
+* Wavelet denoiser
+  This was developed as part of my thesis for my =Electrical & Computer Engineering= diploma at
+  =Aristotle University of Thessaloniki=. The algorithm is based on the [[https://doi.org/10.1016/j.bspc.2006.08.004][Novel wavelet domain
+  Wiener filtering de-noising techniques: Application to bowel sounds captured by means of abdominal
+  surface vibrations]] paper of my professors Dimoulas, Papanikolaou et al.
+
 * TL;DR
   #+BEGIN_SRC sh
   python3 src/denoiser-argument.py -i <input file path> -o <output file path>
@@ -88,25 +95,6 @@
 docker run -v $(pwd):/code actondev/denoiser python3 src/denoiser-argument.py -i test/resources/sp01_airport_sn5_44100.wav -o denoised.wav
       #+END_SRC
 
-
-* Wavelet denoiser
-  This is the product of my thesis for my =Electrical & Computer Engineering= diploma at =Aristotle University of Thessaloniki=. Good times (nah not really. i'm lazy, and doing this while having a day-job.. mierda)
-
-  Open sourced for 2 reasons
-  + other people can use it
-  + other people can improve it/comment on how to improve it ..aka tell me how much shitty the code -or the math- is :)
-	
-
-  It's my first attempt to try to do something in the open source world.
-
-  #+BEGIN_SRC sh :exports both :eval never-export
-  echo "Hello open source world"
-  #+END_SRC
-
-  #+RESULTS:
-  : Hello open source world
-
-  
 
 * Installation
   + sudo apt-get install python3 python3-setuptools python3-pip
