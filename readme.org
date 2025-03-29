@@ -165,3 +165,11 @@ alias python3="python"
 
 * Known problems
   + [ ] the denoiser is optimized for input files of =44100 kHz= samplerate.
+
+* Using venv
+  #+begin_src sh
+python -m venv venv
+source ./venv/bin/activate
+pip install -r requirements.txt
+python -m unittest discover -v -s ./test -p '*test*.py'
+  #+end_src
