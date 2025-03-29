@@ -6,6 +6,7 @@ import os
 import argparse
 import time
 import soundfile
+import numpy
 from denoise import Denoiser
 from noiseProfiler import NoiseProfiler
 
@@ -54,48 +55,58 @@ fileName = os.path.basename(args.input)
 print("trying to open " + args.input)
 data, sampleRate = soundfile.read(args.input)
 
-# if it's stereo it will have 2 columns.. so, checking for number of columns and if there is
-# more than 1, transpose & keep the first row
+channels = []
+
 if len(data.shape) > 1:
-    data = data.T[0]
-
-print("Number of samples read: " + str(len(data)))
-
-denoiser = Denoiser(
-    a=args.a,
-    b=args.b,
-    c=args.c,
-    d=args.d,
-    akGrad=args.akg,
-    akOffset=args.ako,
-    akSlope=args.aks,
-    wlevels=args.l,
-    method=args.method,
-    waveletName=args.wavelet,
-    filterType=args.type,
-)
-
-
-dataNoise = None
-if args.time != None and args.time != "":
-    # removing the quotes passed
-    args.time = args.time.replace("\"", "")
-    args.time = args.time.replace("'", "")
-    print("using defined period of noise: " + args.time)
-    # keeping first 0.5s as the noise data
-    timeSplitted = args.time.split("-")
-    timeStart = float(timeSplitted[0])
-    timeEnd = float(timeSplitted[1])
-    sampleStart = int(timeStart * sampleRate)
-    sampleEnd = int(timeEnd * sampleRate)
-    dataNoise = data[sampleStart:sampleEnd]
-    dataNoise = denoiser.padArray(dataNoise, len(data))
+    channels.append(data.T[0])
+    channels.append(data.T[1])
 else:
-    noiseProfile = NoiseProfiler(data)
-    dataNoise = noiseProfile.getNoiseDataPredicted()
+    channels.append(data)
 
-dataDenoised = denoiser.denoise(Xin=data, Nin=dataNoise)
+result_channels = []
 
+for data in channels:
+    print("Number of samples read: " + str(len(data)))
+
+    denoiser = Denoiser(
+        a=args.a,
+        b=args.b,
+        c=args.c,
+        d=args.d,
+        akGrad=args.akg,
+        akOffset=args.ako,
+        akSlope=args.aks,
+        wlevels=args.l,
+        method=args.method,
+        waveletName=args.wavelet,
+        filterType=args.type,
+    )
+
+    dataNoise = None
+    if args.time != None and args.time != "":
+        # removing the quotes passed
+        args.time = args.time.replace("\"", "")
+        args.time = args.time.replace("'", "")
+        print("using defined period of noise: " + args.time)
+        # keeping first 0.5s as the noise data
+        timeSplitted = args.time.split("-")
+        timeStart = float(timeSplitted[0])
+        timeEnd = float(timeSplitted[1])
+        sampleStart = int(timeStart * sampleRate)
+        sampleEnd = int(timeEnd * sampleRate)
+        dataNoise = data[sampleStart:sampleEnd]
+        dataNoise = denoiser.padArray(dataNoise, len(data))
+    else:
+        noiseProfile = NoiseProfiler(data)
+        dataNoise = noiseProfile.getNoiseDataPredicted()
+
+    dataDenoised = denoiser.denoise(Xin=data, Nin=dataNoise)
+    result_channels.append(dataDenoised)
+
+if len(result_channels) == 1:
+    result = result_channels[0]
+else:
+    result = numpy.array(result_channels).T
 
 outPath = os.path.dirname(args.output)
 
@@ -103,11 +114,11 @@ if(outPath and not os.path.isdir(outPath)):
     os.makedirs(outPath,exist_ok=True)
 
 print("will write denoised file to " + args.output)
-soundfile.write(args.output, dataDenoised, sampleRate)
+soundfile.write(args.output, result, sampleRate)
 
 print("OK")
 if(args.verbose):
     import sounddevice
     
-    sounddevice.play(dataDenoised, sampleRate)
+    sounddevice.play(result, sampleRate)
     time.sleep(4)
