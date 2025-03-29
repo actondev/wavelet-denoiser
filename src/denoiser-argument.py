@@ -121,4 +121,4 @@ if(args.verbose):
     import sounddevice
     
     sounddevice.play(result, sampleRate)
-    time.sleep(4)
+    sounddevice.wait()

@@ -1,3 +1,4 @@
+#+PROPERTY: header-args:sh :session *wavelet-denoiser*
 * TL;DR
   #+BEGIN_SRC sh
   python3 src/denoiser-argument.py -i <input file path> -o <output file path>
@@ -171,5 +172,7 @@ alias python3="python"
 python -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
+# -v plays the output file
+python src/denoiser-argument.py -i ./test/resources/sp01_airport_sn5_44100.wav -o denoised.wav -v
 python -m unittest discover -v -s ./test -p '*test*.py'
   #+end_src
